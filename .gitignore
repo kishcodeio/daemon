@@ -159,4 +159,8 @@ bun.lock
 *.backup
 *.tmp
 *.temp
+!libs/
+!libs/build/
+!libs/build/Release/
 !libs/build/Release/secure_open.node
+
