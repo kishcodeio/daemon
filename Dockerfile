@@ -40,5 +40,5 @@ RUN npm run configure -- --panel "https://panel.fshost.qzz.io" --key "oFergEDyhO
 
     
 
-# 6. Start the app fortland
+# 6. Start the app 
 CMD ["node", "dist/app/app.js"]
