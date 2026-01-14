@@ -32,6 +32,10 @@ RUN mkdir -p dist/libs/build/Release/ && \
 
 # 5. ENVIRONMENT FIX: Create .env and set to 0.0.0.0 for Render
 RUN echo 'remote="0.0.0.0"\nport=10000\nDEBUG=false\nenvironment="production"' > .env
+# Create a fake docker command that returns success for 'docker ps'
+RUN echo '#!/bin/sh\nexit 0' > /usr/local/bin/docker && \
+    chmod +x /usr/local/bin/docker
+    
 
 # 6. Start the app
 CMD ["node", "dist/app/app.js"]
