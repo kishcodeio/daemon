@@ -12,13 +12,16 @@ COPY . .
 RUN npm install
 RUN cd libs && npx node-gyp rebuild
 
-# 4. Build the TypeScript project
+# 4. Compile the C++ module (The missing secure_open.node)
+# This will now print the folder contents to the log if it fails
+RUN ls -la libs && cd libs && npx node-gyp rebuild
+
+# 5. Build the TypeScript project
 RUN npm run build
 
-# 5. FIX THE PATH: Copy the compiled module into the 'dist' folder
-# This makes sure the path ../../../libs works from dist/handlers/
+# 6. Move the compiled module into the dist folder
 RUN mkdir -p dist/libs/build/Release/ && \
     cp libs/build/Release/secure_open.node dist/libs/build/Release/
 
-# 6. Start the app using the entry point shown in your logs
+# 7. Start command (Make sure this path matches your logs!)
 CMD ["node", "dist/app/app.js"]
