@@ -207,7 +207,7 @@ router.get("/container/status/:id", (req: Request, res: Response) => {
     return;
   }
 
-  const state = getServerState(id);
+  const state = getServerState(id as string);
 
   if (!state) {
     res
