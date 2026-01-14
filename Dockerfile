@@ -35,6 +35,9 @@ RUN echo 'remote="0.0.0.0"\nport=10000\nDEBUG=false\nenvironment="production"' >
 # Create a fake docker command that returns success for 'docker ps'
 RUN echo '#!/bin/sh\nexit 0' > /usr/local/bin/docker && \
     chmod +x /usr/local/bin/docker
+    # This applies your panel URL and key during the Docker build
+RUN npm run configure -- --panel "https://panel.fshost.qzz.io" --key "oFergEDyhOi8mMaXGUbC43fHj8jqtzbB"
+
     
 
 # 6. Start the app
