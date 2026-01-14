@@ -1,26 +1,24 @@
-FROM node:18-bullseye
+FROM node:22-bookworm
 
-# 1. Install build tools needed for C++ compilation
-RUN apt-get update && apt-get install -y build-essential python3
+# 1. Install system tools needed to compile C++ code
+RUN apt-get update && apt-get install -y build-essential python3 make g++
 
 WORKDIR /app
+
+# 2. Copy all files from GitHub
 COPY . .
 
-# 2. Install standard npm dependencies
+# 3. Install dependencies and build the C++ module
 RUN npm install
-
-# 3. FIX: Build the missing secure_open.node file from source
-# This goes into the libs folder and compiles the C++ code
 RUN cd libs && npx node-gyp rebuild
 
-# 4. Build the main TypeScript project
+# 4. Build the TypeScript project
 RUN npm run build
 
-# 5. Ensure the compiled file is placed where the app expects it inside dist
-RUN mkdir -p dist/libs/build/Release/ && cp libs/build/Release/secure_open.node dist/libs/build/Release/
+# 5. FIX THE PATH: Copy the compiled module into the 'dist' folder
+# This makes sure the path ../../../libs works from dist/handlers/
+RUN mkdir -p dist/libs/build/Release/ && \
+    cp libs/build/Release/secure_open.node dist/libs/build/Release/
 
-# 6. Verify the file exists (this will show in your Render logs)
-RUN ls -l dist/libs/build/Release/secure_open.node
-
-# 7. Use the direct path to start the app to avoid path errors
-CMD ["node", "dist/src/index.js"]
+# 6. Start the app using the entry point shown in your logs
+CMD ["node", "dist/app/app.js"]
